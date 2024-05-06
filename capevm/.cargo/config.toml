@@ -2,7 +2,7 @@
 target = "avr-specs/avr-atmega1280.json"
 
 [target.'cfg(target_arch = "avr")']
-runner = "ravedude mega1280 -cb 57600"
+runner = "java -jar ../avrora/avrora-beta-1.7.117.jar -monitors=memory,stack,leds -single -platform=mica2"
 
 [unstable]
 build-std = ["core"]
