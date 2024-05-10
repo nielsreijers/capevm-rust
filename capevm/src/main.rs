@@ -20,6 +20,21 @@ fn main() -> ! {
         avrora::print_sp();
         avrora::print_r1();
 
+        avrora::print_ram_string("1) Hello, World!");
+        avrora::print_ram_string("1) Hello, World!");
+
+        // This works
+        use avr_progmem::progmem;
+        progmem! {
+            static progmem string HELLO = "2) Hello, World!!";
+        }
+        avrora::print_flash_string_fn(HELLO);
+        avrora::print_flash_string_fn(HELLO);
+
+        // But this is more convenient
+        avrora::print_flash_string!("3) Hello, World!!!");
+        avrora::print_flash_string!("3) Hello, World!!!");
+
         arduino_hal::delay_ms(1000);
     }
 }

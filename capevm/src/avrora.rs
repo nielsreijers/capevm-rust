@@ -1,14 +1,17 @@
+use avr_progmem::string::PmString;
 use core::ptr::{addr_of_mut, write_volatile};
 
-const AVRORA_PRINT_2BYTE_HEXADECIMALS: u8        = 0x1;
-const AVRORA_PRINT_2BYTE_UNSIGNED_INTEGERS: u8   = 0x3;
-const AVRORA_PRINT_2BYTE_SIGNED_INTEGERS: u8     = 0x8;
-const AVRORA_PRINT_4BYTE_HEXADECIMALS: u8        = 0x4;
-const AVRORA_PRINT_4BYTE_UNSIGNED_INTEGERS: u8   = 0x5;
-const AVRORA_PRINT_4BYTE_SIGNED_INTEGERS: u8     = 0x9;
-const AVRORA_PRINT_R1: u8                        = 0xC;
-const AVRORA_PRINT_SP: u8                        = 0xD;
-const AVRORA_PRINT_REGS: u8                      = 0xE;
+const AVRORA_PRINT_2BYTE_HEXADECIMALS: u8        = 0x01;
+const AVRORA_PRINT_2BYTE_UNSIGNED_INTEGERS: u8   = 0x03;
+const AVRORA_PRINT_4BYTE_HEXADECIMALS: u8        = 0x04;
+const AVRORA_PRINT_4BYTE_UNSIGNED_INTEGERS: u8   = 0x05;
+const AVRORA_PRINT_STRING_POINTERS: u8           = 0x06;
+const AVRORA_PRINT_2BYTE_SIGNED_INTEGERS: u8     = 0x08;
+const AVRORA_PRINT_4BYTE_SIGNED_INTEGERS: u8     = 0x09;
+const AVRORA_PRINT_R1: u8                        = 0x0C;
+const AVRORA_PRINT_SP: u8                        = 0x0D;
+const AVRORA_PRINT_REGS: u8                      = 0x0E;
+const AVRORA_PRINT_FLASH_STRING_POINTER: u8      = 0x0F;
 const AVRORA_PRINT_PC: u8                        = 0x12;
 
 #[allow(non_upper_case_globals)]
@@ -97,4 +100,39 @@ pub fn print_pc() {
 #[allow(dead_code)]
 pub fn print_all_regs() {
     signal_avrora_c_print(AVRORA_PRINT_REGS);
+}
+
+/// Uses Avrora's c-print monitor to print a string from RAM
+#[allow(dead_code)]
+pub fn print_ram_string(s: &str) {
+    signal_avrora_c_print_16(AVRORA_PRINT_STRING_POINTERS, s.as_ptr() as u16);
+}
+
+/// Uses Avrora's c-print monitor to print a string from flash memory
+#[allow(unused_macros)]
+#[macro_export]
+macro_rules! print_flash_string {
+    ($s:expr) => { {
+        use avr_progmem::progmem;
+        progmem! {
+            static progmem string AVRORA_PROGMEMSTRING = concat!($s, "\0");
+        }
+        avrora::print_flash_string_fn(AVRORA_PROGMEMSTRING);
+    } };
+}
+
+// Export the macro so it can be used as 'avrora::print_flash_string!'
+#[allow(unused_imports)]
+pub(crate) use print_flash_string;
+
+/// Uses Avrora's c-print monitor to print a string from flash memory
+/// 
+/// This should be called by the print_flash_string! macro, which can
+/// conveniently store a string in flash memory and create the
+/// required PmString.
+#[allow(dead_code)]
+pub fn print_flash_string_fn<const N: usize>(string_in_progmem: PmString<N>) {
+    signal_avrora_c_print_32(
+        AVRORA_PRINT_FLASH_STRING_POINTER,
+        string_in_progmem.as_bytes().as_ptr() as u32);
 }
