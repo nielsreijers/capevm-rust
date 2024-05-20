@@ -5,6 +5,11 @@ authors = ["Niels Reijers <nielsreijers@gmail.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
 
+[features]
+default = ["jvm"]
+jvm = []
+uart = []
+
 [[bin]]
 name = "capevm"
 test = false
