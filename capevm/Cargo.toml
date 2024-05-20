@@ -17,6 +17,9 @@ nb = "0.1.2"
 embedded-hal = "0.2.3"
 avr-progmem = "0.4.0"
 
+[build-dependencies]
+toml = "0.5"
+
 [dependencies.arduino-hal]
 git = "https://github.com/rahix/avr-hal"
 rev = "3e362624547462928a219c40f9ea8e3a64f21e5f"
