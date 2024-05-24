@@ -3,9 +3,14 @@ mod jvm;
 #[cfg(feature = "uart")]
 mod uart;
 
+pub struct Component {
+    init: fn()
+}
+
+inventory::collect!(Component);
+
 pub fn init() {
-    #[cfg(feature = "jvm")]
-    jvm::init();
-    #[cfg(feature = "uart")]
-    uart::init();
+    for component in inventory::iter::<Component> {
+        (component.init)();
+    }
 }
