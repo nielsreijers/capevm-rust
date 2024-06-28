@@ -12,8 +12,8 @@ uart = []
 
 [[bin]]
 name = "capevm"
-test = false
 bench = false
+harness = false
 
 [dependencies]
 panic-halt = "0.2.0"
@@ -35,12 +35,10 @@ version = "=1.0.79"
 
 # Configure the build for minimal size - AVRs have very little program memory
 [profile.dev]
-panic = "abort"
 lto = true
 opt-level = "s"
 
 [profile.release]
-panic = "abort"
 codegen-units = 1
 debug = true
 lto = true
