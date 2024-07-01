@@ -1,3 +1,5 @@
+mod heap;
+
 use crate::avrora;
 
 #[allow(unused_macros)]
@@ -23,12 +25,7 @@ mod vm_tests {
     }
 
     #[test]
-    fn test1() {
-        assert!(true);
-    }
-
-    #[test]
-    fn test2() {
-        assert_eq!(1, 1);
+    fn test_heap() {
+        super::heap::test_heap();
     }
 }

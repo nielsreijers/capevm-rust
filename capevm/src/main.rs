@@ -4,6 +4,7 @@
 
 mod avrora;
 mod components;
+mod heap;
 #[cfg(test)]
 mod tests;
 
