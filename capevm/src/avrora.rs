@@ -1,4 +1,5 @@
 use avr_progmem::string::PmString;
+use core::arch::asm;
 use core::ptr::{addr_of_mut, write_volatile};
 
 const AVRORA_PRINT_2BYTE_HEXADECIMALS: u8        = 0x01;
@@ -114,10 +115,11 @@ pub fn print_ram_string(s: &str) {
 macro_rules! print_flash_string {
     ($s:expr) => { {
         use avr_progmem::progmem;
+        use $crate::avrora::print_flash_string_fn;
         progmem! {
             static progmem string AVRORA_PROGMEMSTRING = concat!($s, "\0");
         }
-        avrora::print_flash_string_fn(AVRORA_PROGMEMSTRING);
+        print_flash_string_fn(AVRORA_PROGMEMSTRING);
     } };
 }
 
@@ -135,4 +137,16 @@ pub fn print_flash_string_fn<const N: usize>(string_in_progmem: PmString<N>) {
     signal_avrora_c_print_32(
         AVRORA_PRINT_FLASH_STRING_POINTER,
         string_in_progmem.as_bytes().as_ptr() as u32);
+}
+
+pub fn exit() -> ! {
+    unsafe { asm!("break"); }
+    loop {}
+}
+
+#[cfg(not(test))]
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    print_flash_string!("PANIC!");
+    exit();
 }

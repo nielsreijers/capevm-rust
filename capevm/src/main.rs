@@ -1,14 +1,20 @@
 #![no_std]
 #![no_main]
-
-use panic_halt as _;
+#![feature(asm_experimental_arch)]
 
 mod avrora;
 mod components;
+#[cfg(test)]
+mod tests;
 
+#[cfg(not(test))]
 #[arduino_hal::entry]
 fn main() -> ! {
-    components::init();
+    init();
     avrora::print_flash_string!("Done");
-    loop {}
+    avrora::exit();
+}
+
+fn init() {
+    components::init();
 }
