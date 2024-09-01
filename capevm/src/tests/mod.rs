@@ -1,4 +1,5 @@
 mod heap;
+mod jvm;
 
 use crate::avrora;
 
@@ -27,5 +28,15 @@ mod vm_tests {
     #[test]
     fn test_heap() {
         super::heap::test_heap();
+    }
+
+    #[test]
+    fn test_sadd() {
+        super::jvm::test_sadd();
+    }
+
+    #[test]
+    fn test_saload() {
+        super::jvm::test_saload();
     }
 }

@@ -1,7 +1,7 @@
 #[cfg(feature = "jvm")]
-mod jvm;
+pub mod jvm;
 #[cfg(feature = "uart")]
-mod uart;
+pub mod uart;
 
 pub fn init() {
     #[cfg(feature = "jvm")]
