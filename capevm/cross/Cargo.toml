@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "app",
+]
+resolver = "2"
+
+# Configure the build for minimal size - AVRs have very little program memory
+[profile.dev]
+lto = true
+opt-level = "s"
+
+[profile.release]
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"

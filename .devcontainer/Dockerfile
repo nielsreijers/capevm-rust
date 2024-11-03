@@ -9,6 +9,8 @@ RUN sudo dnf -y install avr-libc
 RUN sudo dnf -y install openssl-devel
 RUN sudo dnf -y group install "Development Tools"
 RUN sudo dnf -y install java
+RUN sudo dnf -y install java-1.8.0-openjdk-devel
+
 
 # from https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 # Create the user

@@ -1,0 +1,37 @@
+[package]
+name = "capevm"
+version = "0.1.0"
+authors = ["Niels Reijers <nielsreijers@gmail.com>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[features]
+default = ["jvm"]
+jvm = []
+uart = []
+
+[[bin]]
+name = "capevm"
+bench = false
+harness = false
+
+[dependencies]
+panic-halt = "0.2.0"
+ufmt = "0.2.0"
+nb = "0.1.2"
+embedded-hal = "0.2.3"
+avr-progmem = "0.4.0"
+
+[dev-dependencies]
+avr-defmt-test = { git = "https://github.com/nielsreijers/avr-defmt-test.git", tag = "0.1.0" }
+
+[dependencies.arduino-hal]
+git = "https://github.com/rahix/avr-hal"
+rev = "3e362624547462928a219c40f9ea8e3a64f21e5f"
+features = ["arduino-mega1280"]
+
+# The latest releases of `proc-macro2` do not support the rust toolchain that
+# we use.  Thus, we must fix this dependency to an older version where our
+# toolchain is still supported.  See https://github.com/Rahix/avr-hal/issues/537
+[build-dependencies.proc-macro2]
+version = "=1.0.79"
