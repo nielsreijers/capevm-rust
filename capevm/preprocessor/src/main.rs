@@ -1,34 +1,19 @@
+use clap::Parser;
 use opcodes::Opcode;
-use classfile_parser::class_parser;
 
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Path of the jar file to process
+    jar: std::path::PathBuf,
+
+    /// Add a header file for a CapeVM library the current
+    #[arg(short)]
+    cap_header: Vec<std::path::PathBuf>,
+}
 
 fn main() {
-    let classfile_bytes = include_bytes!("../../benchmarks/bsort16/java/capevm/bench/Benchmark.class");
+    let args = Args::parse();
 
-    match class_parser(classfile_bytes) {
-        Ok((_, class_file)) => {
-            println!(
-                "version {},{} \
-                 const_pool({}), \
-                 this=const[{}], \
-                 super=const[{}], \
-                 interfaces({}), \
-                 fields({}), \
-                 methods({}), \
-                 attributes({}), \
-                 access({:?})",
-                class_file.major_version,
-                class_file.minor_version,
-                class_file.const_pool_size,
-                class_file.this_class,
-                class_file.super_class,
-                class_file.interfaces_count,
-                class_file.fields_count,
-                class_file.methods_count,
-                class_file.attributes_count,
-                class_file.access_flags
-            );
-        }
-        Err(_) => panic!("Failed to parse"),
-    };
+    println!("Jar file: {:?}, headers: {:?}", args.jar, args.cap_header);
 }

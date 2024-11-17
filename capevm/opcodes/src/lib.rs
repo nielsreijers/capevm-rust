@@ -2,4 +2,3 @@
 pub enum Opcode {
     NOP = 0x00,
 }
-
