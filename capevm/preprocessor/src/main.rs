@@ -1,5 +1,7 @@
 use clap::Parser;
-use opcodes::Opcode;
+use jar::JarReader;
+
+mod jar;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -15,5 +17,18 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    println!("Jar file: {:?}, headers: {:?}", args.jar, args.cap_header);
+    let mut jar = JarReader::new(&args.jar).unwrap();
+
+    println!(
+        "Path to file: {:?}, headers: {:?}",
+        args.jar, args.cap_header
+    );
+    println!("");
+    println!("Jar: {:?}", jar);
+    println!("");
+    println!("Classes");
+    for file in jar.classfile_names() {
+        let class = jar.by_filename(&file).unwrap();
+        println!("    {:?}: {} bytes", file, class.len());
+    }
 }
